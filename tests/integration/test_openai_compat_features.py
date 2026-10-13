@@ -669,6 +669,41 @@ async def test_v1_chat_completions_maps_response_format(async_client, monkeypatc
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize("route", ["/v1/chat/completions", "/v1/responses"])
+async def test_json_object_mode_keeps_system_message_in_upstream_input(async_client, monkeypatch, route):
+    await _import_account(async_client, "acc_json_object", "json-object@example.com")
+
+    seen = {}
+
+    async def fake_stream(payload, headers, access_token, account_id, base_url=None, raise_for_status=False):
+        seen["payload"] = payload
+        yield _completed_event("resp_json_object")
+
+    monkeypatch.setattr(proxy_module, "core_stream_responses", fake_stream)
+
+    messages = [
+        {"role": "system", "content": "Reply in json."},
+        {"role": "user", "content": "Say hello."},
+    ]
+    if route == "/v1/chat/completions":
+        payload = {"model": "gpt-5.2", "messages": messages, "response_format": {"type": "json_object"}}
+    else:
+        payload = {
+            "model": "gpt-5.2",
+            "instructions": "",
+            "input": messages,
+            "text": {"format": {"type": "json_object"}},
+        }
+    resp = await async_client.post(route, json=payload)
+    assert resp.status_code == 200
+
+    upstream = seen["payload"].to_payload()
+    assert "json" not in upstream["instructions"]
+    assert upstream["input"][0]["role"] == "system"
+    assert "Reply in json." in json.dumps(upstream["input"][0])
+
+
+@pytest.mark.asyncio
 async def test_v1_chat_completions_rejects_strict_schema_violation(async_client):
     """Strict-mode schema violations are rejected locally with 400.
 

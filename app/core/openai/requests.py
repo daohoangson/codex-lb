@@ -343,6 +343,10 @@ def _normalize_responses_input_instructions(data: JsonValue) -> JsonValue:
     # developer message into the top-level ``instructions`` field.
     if responses_input_uses_lite_tools(input_value):
         return data
+    # JSON mode upstream requires the word "json" in the input messages, which
+    # clients usually put in a system message; lifting it would fail the check.
+    if _uses_json_object_text_format(data):
+        return data
 
     instruction_parts: list[str] = []
     input_items: list[JsonValue] = []
@@ -390,6 +394,14 @@ def _normalize_responses_input_instructions(data: JsonValue) -> JsonValue:
     normalized["instructions"] = merged_instructions
     normalized["input"] = input_items
     return normalized
+
+
+def _uses_json_object_text_format(data: Mapping[str, JsonValue]) -> bool:
+    text = _json_mapping_or_none(data.get("text"))
+    if text is None:
+        return False
+    text_format = _json_mapping_or_none(text.get("format"))
+    return text_format is not None and text_format.get("type") == "json_object"
 
 
 def _is_responses_lite_input(input_value: list[JsonValue]) -> bool:
