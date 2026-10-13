@@ -1,0 +1,27 @@
+app/core/openai/requests.py
+  e149d79da7a80254 346-349,399-406
+tests/unit/test_chat_request_mapping.py
+  e149d79da7a80254 492,494-495
+tests/integration/test_openai_compat_features.py
+  e149d79da7a80254 672-705
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.32",
+  "base_commit_sha": "af8957a9aec214d485c9a2aab4743b59d743fed2",
+  "prompts": {
+    "e149d79da7a80254": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "274fb9c1-b5b4-4512-9421-a526b8c18de2",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Dao Hoang Son <daohoangson@gmail.com>",
+      "messages": [],
+      "total_additions": 50,
+      "total_deletions": 1,
+      "accepted_lines": 50,
+      "overriden_lines": 0
+    }
+  }
+}
