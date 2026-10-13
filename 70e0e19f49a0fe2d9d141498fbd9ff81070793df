@@ -1,0 +1,23 @@
+.github/workflows/fork-image.yml
+  e149d79da7a80254 1-60
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.0.32",
+  "base_commit_sha": "70e0e19f49a0fe2d9d141498fbd9ff81070793df",
+  "prompts": {
+    "e149d79da7a80254": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "274fb9c1-b5b4-4512-9421-a526b8c18de2",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "Dao Hoang Son <daohoangson@gmail.com>",
+      "messages": [],
+      "total_additions": 60,
+      "total_deletions": 0,
+      "accepted_lines": 60,
+      "overriden_lines": 0
+    }
+  }
+}
